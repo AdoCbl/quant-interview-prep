@@ -26,6 +26,7 @@ Preparation for **Quant Researcher (QR)** and **Quant Developer (QD)** interview
 - Finance — options pricing, Greeks, portfolio theory, factor models
 - Linear algebra — eigen-decomposition, PCA, covariance estimation
 - Machine learning — bias/variance, regularisation, time-series CV, overfitting in backtests
+- LLMs, agents, RAG, MCP — transformer basics, retrieval pipelines, agent patterns, finance pitfalls
 
 **Quant Developer**
 - C++ — memory model, move semantics, templates, cache-friendly design, lock-free structures
