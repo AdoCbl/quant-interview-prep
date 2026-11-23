@@ -2,6 +2,8 @@
 
 Every abbreviation is spelled out the first time it appears. The glossary at the end lists them all.
 
+For real-world cases, worked designs and practical tricks, see [real-cases-and-tricks.md](real-cases-and-tricks.md).
+
 ## 1. How a large language model (LLM) works
 
 ### Architecture
