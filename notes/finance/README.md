@@ -322,42 +322,70 @@ turnover and 5 bp cost per trade pays 1% a year, which can be most of its return
 
 ## 9. Interview questions
 
-**Q1. Daily Sharpe ratio is 0.1. What is the annual Sharpe ratio?**
-`0.1 × √252 ≈ 1.59`, assuming daily returns are independent. Mention that autocorrelation breaks
-this.
+Each answer gives the formula first, then the numbers, then why it works.
 
-**Q2. A strategy has Sharpe 2 over 1 year. Is it good?**
-Standard error is about `√((1 + 2) / 1) ≈ 1.7`, so the true value could easily be near zero. Ask
-how many strategies were tried, whether costs are included, and look at drawdowns and skew.
+**Q1. The daily Sharpe ratio is 0.1. What is the annual Sharpe ratio?**
+- Formula: `SR_annual = SR_daily × √N`, with N = 252 trading days.
+- Numbers: `0.1 × √252 = 0.1 × 15.87 ≈ 1.59`.
+- Why: the mean grows with N but the standard deviation only with √N, so their ratio grows with √N.
+  This assumes daily returns are independent; autocorrelation breaks it.
 
-**Q3. Two strategies, each with Sharpe 1, correlation 0. Sharpe of a 50/50 mix?**
-Returns add, volatilities add in quadrature: Sharpe = `1 × √2 ≈ 1.41`. With `n` uncorrelated
-equal-Sharpe strategies, Sharpe grows like `√n`. This is the reason multi-strategy funds exist.
+**Q2. A strategy has a Sharpe ratio of 2 over 1 year. Is it good?**
+- Formula: standard error `SE(SR) ≈ √((1 + SR²/2) / T)`, with T in years.
+- Numbers: `√((1 + 4/2) / 1) = √3 ≈ 1.73`. The 95% interval is `2 ± 1.96 × 1.73`, about −1.4 to 5.4.
+- Why: one year is too little data; the interval includes zero. Also ask how many strategies were
+  tried, whether costs are included, and what the drawdowns and skew look like.
 
-**Q4. Why can a strategy with positive average return lose money over time?**
-Volatility drag: geometric growth ≈ `μ - σ²/2`. With μ = 5% and σ = 40%, growth ≈ −3% a year.
+**Q3. Two strategies, each with Sharpe ratio 1 and the same volatility, correlation 0. What is the
+Sharpe ratio of a 50/50 mix?**
+- Formula: `μ_p = w₁μ₁ + w₂μ₂` and `σ_p = √(w₁²σ₁² + w₂²σ₂² + 2w₁w₂ρσ₁σ₂)`.
+- Numbers: `μ_p = μ`, `σ_p = √(¼σ² + ¼σ²) = σ / √2`, so `SR_p = μ / (σ/√2) = √2 × 1 ≈ 1.41`.
+- Why: returns add but uncorrelated risks partly cancel. With n such strategies, `SR_p = SR × √n`,
+  which is why multi-strategy funds exist.
+
+**Q4. Why can a strategy with a positive average return lose money over time?**
+- Formula: compound growth rate `g ≈ μ - σ²/2`.
+- Numbers: μ = 5%, σ = 40% gives `0.05 - 0.40²/2 = 0.05 - 0.08 = -3%` a year.
+- Why: wealth multiplies, so what matters is the average **log** return, and
+  `E[ln(1 + R)] ≈ μ - σ²/2`. Losses hurt more than equal gains help (+50% then −50% leaves 75%).
 
 **Q5. Why is Expected Shortfall preferred to VaR?**
-It describes how bad the tail is (VaR only says where it starts), and it is subadditive, so it
-never penalises diversification.
+- Formula: `VaR_α = -q_α` (q_α = the α-quantile of returns) and `ES_α = -E[r | r ≤ q_α]`.
+  A measure is **subadditive** if `risk(A + B) ≤ risk(A) + risk(B)`. ES always is; VaR is not.
+- Numbers: two independent bonds, each with a 4% chance of default. The 95% VaR of each is 0,
+  since 4% < 5%. The chance that at least one defaults is `1 - 0.96² = 7.84%` > 5%, so the
+  combined VaR is positive: holding both looks riskier than the sum of the parts.
+- Why: ES also measures how bad the tail is, while VaR only says where it starts.
 
-**Q6. Price an at-the-money 1-year call, S = 100, σ = 25%, zero rates, in your head.**
-`0.4 × 100 × 0.25 × 1 = 10`.
+**Q6. Price an at-the-money 1-year call in your head: S = 100, σ = 25%, zero rates.**
+- Formula: `C ≈ S σ √T / √(2π) ≈ 0.4 × S × σ × √T`.
+- Numbers: `0.4 × 100 × 0.25 × 1 = 10`. The exact Black-Scholes price is 9.95.
+- Why: at the money with zero rates, `C = S (N(d1) - N(d2))` with `d1 = -d2 = σ√T/2`. For small
+  d, `N(d) - N(-d) ≈ 2d × N'(0) = σ√T / √(2π)`, and `1/√(2π) ≈ 0.4`.
 
 **Q7. You are long a delta-hedged option. When do you make money?**
-When realised volatility is above the implied volatility you paid. Gamma gains from moves, theta
-loses with time.
+- Formula: profit per time step `≈ ½ Γ S² (σ_realised² - σ_implied²) dt`.
+- Numbers: positive if realised volatility > implied volatility, negative if below.
+- Why: the gamma gain from a move is `½ Γ (ΔS)²`, and on average `(ΔS)² = S² σ_realised² dt`.
+  Theta is the cost, priced at the implied volatility: `-½ Γ S² σ_implied² dt`.
 
-**Q8. Why does the call price rise with volatility even though volatility is "risk"?**
-The payoff is convex: the downside is capped at the premium while the upside is not, so more spread
-in outcomes raises the expected payoff.
+**Q8. Why does a call's price rise with volatility, even though volatility is risk?**
+- Formula: `vega = S N'(d1) √T > 0`.
+- Why: the payoff `max(S - K, 0)` is convex. The loss is capped at the premium but the gain is not,
+  so spreading out outcomes raises the expected payoff (Jensen's inequality).
 
-**Q9. A 10-year bond has modified duration 8 and price 100. Yields rise 25 bp. New price?**
-`ΔP ≈ -8 × 100 × 0.0025 = -2`, so about 98, slightly higher once convexity is added.
+**Q9. A bond has modified duration 8, convexity 80 and price 100. Yields rise 25 bp. New price?**
+- Formula: `ΔP ≈ -D_mod × P × Δy + ½ × C × P × Δy²`.
+- Numbers: `-8 × 100 × 0.0025 + ½ × 80 × 100 × 0.0025² = -2.000 + 0.025 = -1.975`, so ≈ 98.03.
+- Why: duration is the slope of price against yield, convexity the curvature. Convexity always
+  helps the holder.
 
-**Q10. Why is the minimum-variance portfolio often used instead of the tangency portfolio?**
-It needs no expected-return forecasts, which are the noisiest input. The tangency portfolio is very
-sensitive to errors in them.
+**Q10. Why use the minimum-variance portfolio instead of the tangency portfolio?**
+- Formula: minimum variance `w ∝ Σ⁻¹ 1`; tangency `w ∝ Σ⁻¹ (μ - r_f)`.
+- Numbers: the standard error of a mean return is `σ / √T`. With σ = 20% and 10 years:
+  `0.20 / √10 ≈ 6.3%` a year, about as large as the return being estimated.
+- Why: the tangency weights depend on μ, which is the noisiest input, and the optimiser magnifies
+  its errors. The minimum-variance weights need only Σ, which is estimated far more accurately.
 
 ---
 
@@ -384,6 +412,7 @@ sensitive to errors in them.
 | Expected Shortfall (ES) | Average loss beyond VaR |
 | Factor | A common driver of many asset returns (market, size, value, momentum) |
 | Implied volatility | Volatility that makes the model price match the market price |
+| Jensen's inequality | For a convex payoff f, E[f(X)] ≥ f(E[X]); spreading outcomes raises the average payoff |
 | Information ratio | Excess return over benchmark divided by tracking error |
 | Kelly criterion | Bet size that maximises long-run growth |
 | Log return | `ln(P_t / P_{t-1})`; adds across time |
@@ -397,6 +426,7 @@ sensitive to errors in them.
 | Slippage | Expected price minus achieved price |
 | Sortino ratio | Excess return divided by downside deviation |
 | Spread | Ask price minus bid price |
+| Subadditive | Risk of a combined book is at most the sum of the parts' risks |
 | Survivorship bias | Testing only on assets that still exist |
 | Swap | Exchange of fixed for floating interest payments |
 | Tracking error | Volatility of returns relative to the benchmark |
