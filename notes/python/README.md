@@ -439,6 +439,89 @@ row_means = prices.mean(axis=1, keepdims=True)   # (252, 1), keeps the dimension
 
 ---
 
+## 12. Classic implementations (with code)
+
+Full, commented, tested code is in [`src/quantprep/classics/`](../../src/quantprep/classics/). Each structure is checked against Python's built-in equivalent over thousands of random operations ([`tests/test_classics.py`](../../tests/test_classics.py)). Run the tests with `uv run pytest tests/test_classics.py`.
+
+| File | What it is | Running time | Key idea to explain |
+|---|---|---|---|
+| [`hash_map.py`](../../src/quantprep/classics/hash_map.py) | A dictionary from scratch | get/set/delete O(1) on average | One flat table; step to the next slot on a collision; "tombstones" for deletes; grow at 2/3 full |
+| [`binary_search.py`](../../src/quantprep/classics/binary_search.py) | Exact search, lower/upper bound, search on the answer, rotated array, root finding (implied volatility) | O(log n) | One consistent template: half-open range `[lo, hi)`, `while lo < hi` |
+| [`lru_cache.py`](../../src/quantprep/classics/lru_cache.py) | LRU cache (with `OrderedDict`, and from scratch), plus a caching decorator | get/put O(1) | Dict for finding a node + doubly linked list for the order |
+| [`heap.py`](../../src/quantprep/classics/heap.py) | Min-heap from scratch, top-k of a stream | push/pop O(log n), build O(n) | A tree stored in a list: children at 2i+1 and 2i+2 |
+| [`streaming.py`](../../src/quantprep/classics/streaming.py) | Running median, sliding-window max, one-pass mean/variance | O(log n), O(1) on average, O(1) | Two heaps; a deque of decreasing values; Welford's method |
+| [`union_find.py`](../../src/quantprep/classics/union_find.py) | Grouping items into connected sets | almost O(1) | Attach the smaller tree under the larger; shorten paths while searching |
+| [`trie.py`](../../src/quantprep/classics/trie.py) | Prefix tree for autocomplete | O(word length) | Nested dicts, one level per character |
+
+### Binary search: the one template to memorise
+```python
+def lower_bound(a, x):            # first index i with a[i] >= x  (= bisect.bisect_left)
+    lo, hi = 0, len(a)            # answer is always inside [lo, hi)
+    while lo < hi:
+        mid = (lo + hi) // 2
+        if a[mid] < x:
+            lo = mid + 1          # mid is too small, so the answer is to its right
+        else:
+            hi = mid              # mid might be the answer; keep it
+    return lo
+```
+- **Upper bound** (the first index with `a[i] > x`): change `<` to `<=`.
+- **Search on the answer**: replace `a[mid] < x` with "is `mid` too small?" for any yes/no test that flips once. Examples: the smallest batch size that fits in memory, or the integer square root.
+- In C++, write `lo + (hi - lo) / 2` to avoid integer overflow. Python integers never overflow.
+
+### LRU cache from scratch: the core
+```python
+class LRUCache:
+    def __init__(self, capacity):
+        self.capacity, self.map = capacity, {}               # key -> node
+        self.head, self.tail = Node(), Node()                 # dummy ends: no empty-list special cases
+        self.head.next, self.tail.prev = self.tail, self.head
+
+    def get(self, key):
+        node = self.map.get(key)
+        if node is None:
+            return None
+        self._unlink(node); self._append(node)                # move to "most recent" end
+        return node.value
+
+    def put(self, key, value):
+        if key in self.map:
+            node = self.map[key]; node.value = value
+            self._unlink(node); self._append(node)
+            return
+        if len(self.map) == self.capacity:
+            oldest = self.head.next                           # least recent sits at the front
+            self._unlink(oldest); del self.map[oldest.key]
+        node = Node(key, value); self.map[key] = node; self._append(node)
+```
+- Each node stores its own key, so the evicted key can be removed from the dict.
+- Follow-up questions:
+  - *Thread safety?* Wrap `get` and `put` in a `threading.Lock`.
+  - *Expiry by time?* Store a timestamp per node and treat expired nodes as missing.
+  - *Evict the least *frequently* used instead (LFU)?* Keep a dict from usage count to an ordered set of keys, and track the minimum count.
+
+### Dictionary from scratch: the core of the lookup
+```python
+def _find_slot(self, key):
+    mask = len(self.keys) - 1                  # table size is a power of two
+    i = hash(key) & mask                       # low bits of the hash = starting slot
+    first_tombstone = None
+    while True:
+        k = self.keys[i]
+        if k is EMPTY:                         # key is not present
+            return (first_tombstone if first_tombstone is not None else i), False
+        if k is DELETED:
+            if first_tombstone is None: first_tombstone = i   # remember a reusable slot
+        elif k is key or k == key:
+            return i, True
+        i = (i + 1) & mask                     # collision: try the next slot
+```
+- **Why tombstones?** Emptying a deleted slot would break the chain for any key that had stepped past it.
+- **Why grow at two-thirds full?** Fuller tables make the chains of slots to check long, and lookups slow down sharply.
+- **How the real `dict` differs**: CPython jumps around the table using more bits of the hash (not just the next slot), and keeps a separate list of entries in insertion order. That's why dicts remember insertion order.
+
+---
+
 ## Glossary
 | Term | Meaning |
 |---|---|
