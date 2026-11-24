@@ -33,7 +33,7 @@ Preparation for **Quant Researcher (QR)** and **Quant Developer (QD)** interview
 - C++ — memory model, move semantics, templates, cache-friendly design, lock-free structures
 - Python (mid/senior) — data model, internals, concurrency, performance, NumPy/pandas depth — see `notes/python`
 - Data structures & algorithms (LeetCode-style)
-- System design — market data feed handler, order book, matching engine, backtester
+- System design — framework, latency numbers, risk/scenario service, swap market-making system, feed handler, kdb+ tick, matching engine, backtester — see `notes/system-design`
 
 ## Commands
 
