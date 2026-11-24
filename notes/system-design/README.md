@@ -10,7 +10,7 @@ System design rounds are open-ended: "Design a risk service", "Design a market d
 This page has four parts:
 - **Part 1:** a framework you can use for any question.
 - **Part 2:** the building blocks and the numbers to know.
-- **Part 3:** six worked designs for trading firms, chosen for the target roles (DRW's analytics/risk platform, Morgan Stanley's electronic swaps trading).
+- **Part 3:** six worked designs for trading firms (risk and analytics platforms, electronic swaps trading, market data, matching, backtesting).
 - **Part 4:** common follow-up questions.
 
 Abbreviations are spelled out on first use, and a glossary is at the end. A tested order book is in [`src/quantprep/systems/order_book.py`](../../src/quantprep/systems/order_book.py).
@@ -91,13 +91,13 @@ Abbreviations are spelled out on first use, and a glossary is at the end. A test
   - **Logs**.
   - **Traces** (one request followed across services).
   - **Alerts** tied to targets: "99.9% of risk runs finish within 5 minutes".
-  - DRW's job mentions on-call, so talk about this.
+  - Many quant developer roles include on-call support, so talk about this.
 
 ---
 
 ## Part 3 — Worked designs
 
-### Design A: Risk and scenario analytics service (DRW: analytics / middle office)
+### Design A: Risk and scenario analytics service (analytics / middle office)
 **Prompt**: "Traders and risk managers need option and rate sensitivities for all positions, plus what-if scenarios such as 'rates up 50 basis points, volatility up 2 points', for any time horizon."
 
 **1. Requirements**
@@ -152,7 +152,7 @@ Abbreviations are spelled out on first use, and a glossary is at the end. A test
 
 ---
 
-### Design B: Electronic market-making system for interest rate swaps (Morgan Stanley)
+### Design B: Electronic market-making system for interest rate swaps
 **Prompt**: "Design a system that continuously quotes USD interest rate swaps to clients, responds to requests for quotes, and manages the resulting risk."
 
 **1. Requirements**
@@ -224,7 +224,7 @@ Abbreviations are spelled out on first use, and a glossary is at the end. A test
 ---
 
 ### Design D: Tick data platform (kdb+ "tick" architecture)
-Know this one for the Morgan Stanley role:
+Know this one for any role that uses kdb+:
 ```
  Feed handlers ──► Tickerplant ──► Real-time database (today's data, in memory)
                      │   └──────► Real-time subscribers (e.g. live analytics, VWAP calculators)

@@ -6,7 +6,6 @@ Preparation for **Quant Researcher (QR)** and **Quant Developer (QD)** interview
 
 | Path | Purpose |
 |---|---|
-| `jobs/` | Target job descriptions + per-role prep maps (start at `jobs/README.md`) |
 | `notes/<topic>/README.md` | Theory notes + solved problems per topic |
 | `src/quantprep/` | Python implementations (pricing, Monte Carlo, stats, ML) |
 | `tests/` | pytest tests for `src/quantprep` |

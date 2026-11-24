@@ -259,7 +259,7 @@ of call and put (7.94) is close to the zero-rate rule of thumb. The repo's teste
 
 ## 7. Bonds and interest rates basics
 
-Full detail for the rates roles is in [notes/rates](../rates/README.md). The essentials:
+Full detail is in [notes/rates](../rates/README.md). The essentials:
 
 | Term | Meaning |
 |---|---|
