@@ -25,6 +25,7 @@ Preparation for **Quant Researcher (QR)** and **Quant Developer (QD)** interview
 - Stochastic calculus — Brownian motion, Itô, Girsanov
 - Finance — options pricing, Greeks, portfolio theory, factor models
 - Linear algebra — eigen-decomposition, PCA, covariance estimation
+- Numerical methods — root finding (bisection, Newton, Brent), gradient descent vs Newton, calibration (Levenberg–Marquardt) — see `notes/numerical-methods`
 - Machine learning — bias/variance, regularisation, time-series CV, overfitting in backtests
 - LLMs, agents, RAG, MCP — transformer basics, retrieval pipelines, agent patterns, finance pitfalls
 
