@@ -165,7 +165,19 @@ def retry(times: int):
 
 **Generators** produce values lazily, one at a time, using `yield`. They give constant memory for huge streams, such as reading a tick file line by line:
 ```python
-def read_ticks(path):
+from collections.abc import Iterator
+from typing import NamedTuple
+
+class Tick(NamedTuple):
+    symbol: str
+    price: float
+    size: int
+
+def parse(line: str) -> Tick:              # one CSV line: symbol,price,size
+    symbol, price, size = line.strip().split(",")
+    return Tick(symbol, float(price), int(size))
+
+def read_ticks(path: str) -> Iterator[Tick]:
     with open(path) as f:
         for line in f:
             yield parse(line)
@@ -302,6 +314,8 @@ asyncio.run(main())
 - **Fancy indexing** with a list or array of positions (`a[[1, 2]]`) and **boolean masks** (`a[a > 0]`) return **copies**.
 
 ```python
+import numpy as np
+
 a = np.arange(6)
 b = a[1:4];   b[0] = 99    # a changes:  [0 99 2 3 4 5]
 c = a[[1, 2]]; c[0] = -1   # a unchanged: c is a copy
@@ -319,7 +333,10 @@ c = a[[1, 2]]; c[0] = -1   # a unchanged: c is a copy
 ### Broadcasting rules
 Shapes are compared from the **last** dimension backwards. Each pair of dimensions must be equal, or one of them must be 1 (which is stretched to match).
 ```python
-prices.shape  # (days, assets)       e.g. (252, 50)
+import numpy as np
+
+rng = np.random.default_rng(0)
+prices = rng.normal(100, 5, size=(252, 50))   # shape (days, assets)
 means = prices.mean(axis=0)          # shape (50,)
 demeaned = prices - means            # (252, 50) - (50,) works: subtracts each asset's mean
 row_means = prices.mean(axis=1, keepdims=True)   # (252, 1), keeps the dimension so it broadcasts
@@ -336,7 +353,13 @@ row_means = prices.mean(axis=1, keepdims=True)   # (252, 1), keeps the dimension
 - Use in-place operations to avoid temporary arrays: `a *= 2`, `np.add(a, b, out=a)`.
 - `np.einsum` writes tensor operations compactly, e.g. a portfolio variance for many portfolios at once:
   ```python
-  np.einsum("pi,ij,pj->p", W, Cov, W)
+  import numpy as np
+
+  rng = np.random.default_rng(0)
+  X = rng.normal(size=(500, 4))
+  Cov = np.cov(X, rowvar=False)                 # 4 x 4 covariance of 4 assets
+  W = rng.dirichlet(np.ones(4), size=3)         # 3 portfolios' weights, shape (3, 4)
+  variances = np.einsum("pi,ij,pj->p", W, Cov, W)   # one variance per portfolio
   ```
 - Random numbers: use `rng = np.random.default_rng(seed)`, a modern independent generator you pass around, rather than the old global `np.random.seed`.
 - Linear algebra: use `np.linalg.solve(A, b)` rather than `inv(A) @ b` (faster and more accurate). Use `cholesky` for a covariance matrix you know is positive definite.
@@ -351,7 +374,10 @@ row_means = prices.mean(axis=1, keepdims=True)   # (252, 1), keeps the dimension
   - `agg`: one value per group (sum, mean).
   - `transform`: the result has the same length as the input, e.g. demeaning returns within each date:
     ```python
-    df["ret"] - df.groupby("date")["ret"].transform("mean")
+    import pandas as pd
+
+    df = pd.DataFrame({"date": ["d1", "d1", "d2", "d2"], "ret": [0.01, 0.03, -0.02, 0.00]})
+    df["ret_demeaned"] = df["ret"] - df.groupby("date")["ret"].transform("mean")
     ```
   - `apply`: anything, but slow. Avoid it when `agg` or `transform` work.
 - **Time series**:
@@ -361,8 +387,19 @@ row_means = prices.mean(axis=1, keepdims=True)   # (252, 1), keeps the dimension
   - `shift(1)` uses the previous value. Forgetting it is the classic look-ahead bug in backtests.
 - **`merge_asof`**: for each row, it finds the latest matching row *at or before* its time. It's the pandas version of kdb+'s `aj` (as-of join), used to attach the prevailing quote to each trade. Both tables must be sorted by time, and use `by="symbol"` to match within each instrument.
   ```python
-  pd.merge_asof(trades.sort_values("time"), quotes.sort_values("time"),
-                on="time", by="symbol", direction="backward")
+  import pandas as pd
+
+  quotes = pd.DataFrame({
+      "time": pd.to_datetime(["2026-11-24 09:30:00", "2026-11-24 09:30:02", "2026-11-24 09:30:05"]),
+      "symbol": ["AAPL", "AAPL", "AAPL"],
+      "bid": [189.9, 190.0, 190.1], "ask": [190.0, 190.1, 190.2],
+  })
+  trades = pd.DataFrame({
+      "time": pd.to_datetime(["2026-11-24 09:30:01", "2026-11-24 09:30:04"]),
+      "symbol": ["AAPL", "AAPL"], "price": [190.0, 190.1],
+  })
+  with_quote = pd.merge_asof(trades.sort_values("time"), quotes.sort_values("time"),
+                             on="time", by="symbol", direction="backward")
   ```
 - **Speed and memory**:
   - Avoid `iterrows` / `itertuples` loops; vectorise instead.
@@ -393,10 +430,17 @@ row_means = prices.mean(axis=1, keepdims=True)   # (252, 1), keeps the dimension
   - **Property-based testing** with `hypothesis`: generate random inputs and check that a rule always holds, e.g. "put–call parity holds for any valid inputs".
 - **Structural pattern matching** (3.10+): `match`/`case` can unpack nested data, which is good for parsing messages.
   ```python
-  match msg:
-      case {"type": "trade", "px": px, "qty": qty}: handle_trade(px, qty)
-      case {"type": "quote", "bid": b, "ask": a}:   handle_quote(b, a)
-      case _: log_unknown(msg)
+  def handle_trade(px: float, qty: int) -> None: print("trade", px, qty)
+  def handle_quote(bid: float, ask: float) -> None: print("quote", bid, ask)
+  def log_unknown(msg: dict) -> None: print("unknown", msg)
+
+  def route(msg: dict) -> None:
+      match msg:
+          case {"type": "trade", "px": px, "qty": qty}: handle_trade(px, qty)
+          case {"type": "quote", "bid": b, "ask": a}:   handle_quote(b, a)
+          case _: log_unknown(msg)
+
+  route({"type": "trade", "px": 101.5, "qty": 200})
   ```
 - **Exception groups** (3.11+): `except*` handles several errors raised together, for example by a `TaskGroup`.
 
@@ -471,6 +515,11 @@ def lower_bound(a, x):            # first index i with a[i] >= x  (= bisect.bise
 
 ### LRU cache from scratch: the core
 ```python
+class Node:
+    __slots__ = ("key", "value", "prev", "next")
+    def __init__(self, key=None, value=None):
+        self.key, self.value, self.prev, self.next = key, value, None, None
+
 class LRUCache:
     def __init__(self, capacity):
         self.capacity, self.map = capacity, {}               # key -> node
@@ -493,6 +542,13 @@ class LRUCache:
             oldest = self.head.next                           # least recent sits at the front
             self._unlink(oldest); del self.map[oldest.key]
         node = Node(key, value); self.map[key] = node; self._append(node)
+
+    def _unlink(self, node):                                  # remove from the list
+        node.prev.next, node.next.prev = node.next, node.prev
+
+    def _append(self, node):                                  # insert just before the tail
+        last = self.tail.prev
+        last.next, node.prev, node.next, self.tail.prev = node, last, self.tail, node
 ```
 - Each node stores its own key, so the evicted key can be removed from the dict.
 - Follow-up questions:
@@ -502,19 +558,27 @@ class LRUCache:
 
 ### Dictionary from scratch: the core of the lookup
 ```python
-def _find_slot(self, key):
-    mask = len(self.keys) - 1                  # table size is a power of two
-    i = hash(key) & mask                       # low bits of the hash = starting slot
-    first_tombstone = None
-    while True:
-        k = self.keys[i]
-        if k is EMPTY:                         # key is not present
-            return (first_tombstone if first_tombstone is not None else i), False
-        if k is DELETED:
-            if first_tombstone is None: first_tombstone = i   # remember a reusable slot
-        elif k is key or k == key:
-            return i, True
-        i = (i + 1) & mask                     # collision: try the next slot
+EMPTY = object()      # marker: slot never used
+DELETED = object()    # marker: slot used, then deleted (a "tombstone")
+
+class HashMap:
+    def __init__(self, capacity: int = 8):    # capacity must be a power of two
+        self.keys = [EMPTY] * capacity
+        self.values = [None] * capacity
+
+    def _find_slot(self, key):
+        mask = len(self.keys) - 1                  # table size is a power of two
+        i = hash(key) & mask                       # low bits of the hash = starting slot
+        first_tombstone = None
+        while True:
+            k = self.keys[i]
+            if k is EMPTY:                         # key is not present
+                return (first_tombstone if first_tombstone is not None else i), False
+            if k is DELETED:
+                if first_tombstone is None: first_tombstone = i   # remember a reusable slot
+            elif k is key or k == key:
+                return i, True
+            i = (i + 1) & mask                     # collision: try the next slot
 ```
 - **Why tombstones?** Emptying a deleted slot would break the chain for any key that had stepped past it.
 - **Why grow at two-thirds full?** Fuller tables make the chains of slots to check long, and lookups slow down sharply.
