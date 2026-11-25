@@ -23,6 +23,7 @@ Preparation for **Quant Researcher (QR)** and **Quant Developer (QD)** interview
 **Quant Research**
 - Stochastic calculus — Brownian motion, Itô, Girsanov
 - [Finance](notes/finance/README.md) — returns, Sharpe ratio and its pitfalls, VaR and Expected Shortfall, portfolio theory, options and Greeks, bond duration and DV01, trading costs
+- [Interest rates](notes/rates/README.md) — curves and bootstrapping, swaps, DV01 and bucketed risk, carry and roll-down, curve trades, swaptions and SABR, Hull-White and LMM, electronic swaps markets
 - Linear algebra — eigen-decomposition, PCA, covariance estimation
 - Numerical methods — root finding (bisection, Newton, Brent), gradient descent vs Newton, calibration (Levenberg–Marquardt) — see `notes/numerical-methods`
 - Machine learning — bias/variance, regularisation, time-series CV, overfitting in backtests
