@@ -8,6 +8,9 @@ Every code block runs on its own (`uv run python file.py`). The numbers in the c
 running it. Basics such as duration and convexity of a single bond are in the
 [finance page](../finance/README.md#7-bonds-and-interest-rates-basics).
 
+Deep dives with figures: [SABR](sabr.md) (smile model, parameters, calibration, hedging) and
+[LMM](lmm.md) (forward market model, volatility and correlation, swaptions, Bermudans).
+
 Contents:
 
 1. [Building blocks](#1-building-blocks)
@@ -252,6 +255,8 @@ curvature. Hedging only level and slope leaves the trade exposed to the rest.
 
 ## 7. Options: swaptions, caps and SABR
 
+Full detail, with figures of each parameter's effect: [SABR page](sabr.md).
+
 **Normal (Bachelier) model.** Rates can be near zero or negative, so rates options are quoted in
 **normal volatility**: the standard deviation of the rate change in basis points per year.
 
@@ -316,6 +321,8 @@ or arbitrage-free versions.
 ---
 
 ## 8. Term structure models
+
+Full detail on the market model, with figures: [LMM page](lmm.md).
 
 Used to price products whose value depends on the path of rates (Bermudan swaptions, callable
 bonds) and to simulate future exposure.
