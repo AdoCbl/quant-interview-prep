@@ -378,7 +378,7 @@ print(f"5y zero rate {-np.log(closed_form) / T:.4%}")                       # 4.
 price for each RFQ (mid + spread for size, risk and client), automatic hedging with Treasury
 futures, inventory limits, and post-trade analysis of markouts and win rates. The
 [system design page](../system-design/README.md) has a worked design, and the
-[market-making notes](../market-making/README.md) cover the quoting models.
+[trading and market-making page](../market-making/README.md) covers the quoting models.
 
 ---
 
