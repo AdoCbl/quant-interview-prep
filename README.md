@@ -33,7 +33,7 @@ Preparation for **Quant Researcher (QR)** and **Quant Developer (QD)** interview
 **Quant Developer**
 - C++ — memory model, move semantics, templates, cache-friendly design, lock-free structures
 - [Python (mid/senior)](notes/python/README.md) — data model, internals, concurrency, performance, NumPy/pandas depth; plus [features, tricks and live-coding habits](notes/python/senior-features-and-tricks.md)
-- Data structures & algorithms (LeetCode-style)
+- [Data structures and algorithms](notes/dsa/README.md) — complexity, pattern picker, two pointers, sliding window, prefix sums, stacks and heaps, graphs (BFS, DFS, topological sort, Dijkstra, Bellman-Ford arbitrage), intervals, binary search on the answer, DP, backtracking, trading-flavoured problems (rolling VWAP, order book, Fenwick tree)
 - System design — framework, latency numbers, risk/scenario service, swap market-making system, feed handler, kdb+ tick, matching engine, backtester — see `notes/system-design`
 
 ## Commands
