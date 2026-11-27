@@ -4,7 +4,8 @@ Coding-interview patterns with one short template each, worked problems (several
 flavour), and the complexity facts you need to justify a solution. Each term is explained the first
 time it appears; a glossary is at the end.
 
-Every code block runs on its own (`uv run python file.py`); the comments show its output. Related
+Every code block runs on its own (`uv run python file.py`); the comments show its output. The same
+patterns in C++, with the standard library and its pitfalls, are in [cpp.md](cpp.md). Related
 pages: tested from-scratch structures (hash map, heap, LRU cache, union-find, trie, running median,
 binary search) are in [Python, section 12](../python/README.md#12-classic-implementations-with-code);
 a tested limit order book is in
