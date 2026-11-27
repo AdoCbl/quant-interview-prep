@@ -72,7 +72,30 @@ The interviewer scores communication as much as the code. Silence for five minut
 | `bisect.bisect_left` | O(log n) | But `insort` is O(n) because the list shifts |
 | `s1 + s2` on strings in a loop | O(n²) total | Collect parts in a list, then `"".join(parts)` |
 
-**Recursion cost formula.** For a "divide into `a` parts of size n/b, combine in O(nᵈ)" algorithm, T(n) = a·T(n/b) + O(nᵈ). The **master theorem** gives: if d > log_b a then O(nᵈ); if equal, O(nᵈ log n); if less, O(n^(log_b a)). Merge sort: a = 2, b = 2, d = 1, so equal, giving O(n log n).
+**Recursion cost formula (master theorem).** T(n) = a·T(n/b) + O(nᵈ), where:
+
+- `a` = number of recursive calls made at each step,
+- `b` = factor by which the input shrinks in each call (each call gets size n/b),
+- `d` = exponent of the extra work done outside the calls (splitting and combining).
+
+`a` and `b` are separate because the calls need not split the input into disjoint pieces. A call can ignore part of the input (binary search: 1 call on half, so a = 1, b = 2), or several calls can work on overlapping or derived inputs of the same size (Karatsuba multiplication: 3 calls on half-size numbers, so a = 3, b = 2). Only when the input is cut into equal, disjoint pieces that are all processed is a = b (merge sort).
+
+Compare d with the critical exponent log_b a. The number of subproblems grows by a factor of a per level, and the work per subproblem shrinks by a factor of bᵈ:
+
+- d > log_b a: the top level dominates, so T(n) = O(nᵈ).
+- d = log_b a: every level costs the same, and there are log_b n levels, so T(n) = O(nᵈ log n).
+- d < log_b a: the leaves dominate (there are a^(log_b n) = n^(log_b a) of them), so T(n) = O(n^(log_b a)).
+
+| Algorithm | a | b | d | log_b a | Case | Cost |
+|---|---|---|---|---|---|---|
+| Binary search | 1 | 2 | 0 | 0 | equal | O(log n) |
+| Merge sort | 2 | 2 | 1 | 1 | equal | O(n log n) |
+| Tree traversal (balanced) | 2 | 2 | 0 | 1 | leaves | O(n) |
+| Karatsuba multiplication | 3 | 2 | 1 | 1.585 | leaves | O(n^1.585) |
+| Strassen matrix multiply | 7 | 2 | 2 | 2.807 | leaves | O(n^2.807) |
+| Quickselect (good pivots) | 1 | 2 | 1 | 0 | top | O(n) |
+
+The theorem needs subproblems of *equal* size n/b. Quicksort with a random pivot does not fit it directly; its O(n log n) expected cost comes from a separate argument.
 
 ---
 
