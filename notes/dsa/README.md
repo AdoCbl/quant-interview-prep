@@ -137,6 +137,11 @@ from itertools import pairwise
 
 
 def two_sum_sorted(a: list[int], target: int) -> tuple[int, int] | None:
+    """Problem: in a sorted array, find indices i < j with a[i] + a[j] == target.
+    Example: a = [1, 3, 4, 6, 8, 11], target = 10 -> (2, 3) because 4 + 6 = 10.
+    Approach: two pointers from both ends; move the one that brings the sum closer.
+    Cost: O(n) time, O(1) memory.
+    """
     i, j = 0, len(a) - 1
     while i < j:
         s = a[i] + a[j]
@@ -150,7 +155,12 @@ def two_sum_sorted(a: list[int], target: int) -> tuple[int, int] | None:
 
 
 def longest_unique_run(s: str) -> int:
-    """Length of the longest substring with no repeated character (sliding window)."""
+    """Problem: length of the longest substring with no repeated character.
+    Example: "abcabcbb" -> 3 ("abc").
+    Approach: sliding window; when a character repeats inside the window, move the
+    left edge just past its previous position.
+    Cost: O(n) time, O(alphabet) memory.
+    """
     last: dict[str, int] = {}
     best = start = 0
     for i, ch in enumerate(s):
@@ -162,7 +172,13 @@ def longest_unique_run(s: str) -> int:
 
 
 def count_subarrays_with_sum(a: list[int], k: int) -> int:
-    """Prefix sums + hash map. Works with negative numbers, unlike a sliding window."""
+    """Problem: count contiguous subarrays whose sum equals k.
+    Example: [1, 2, -1, 2, 1, -2, 3], k = 3 -> 6.
+    Approach: prefix sums; sum(a[i:j]) = P[j] - P[i], so at each j count earlier
+    prefixes equal to P[j] - k, kept in a hash map. Works with negative numbers,
+    unlike a sliding window.
+    Cost: O(n) time, O(n) memory.
+    """
     seen = defaultdict(int, {0: 1})     # prefix sum -> how many times seen
     total = count = 0
     for x in a:
@@ -173,7 +189,12 @@ def count_subarrays_with_sum(a: list[int], k: int) -> int:
 
 
 def max_subarray(a: list[float]) -> float:
-    """Kadane: best sum of a contiguous run."""
+    """Problem: largest sum of a contiguous, non-empty run (Kadane's algorithm).
+    Example: [-2, 1, -3, 4, -1, 2, 1, -5, 4] -> 6 (4 - 1 + 2 + 1).
+    Approach: the best run ending at i is a[i] alone or a[i] plus the best run
+    ending at i - 1; keep the best seen.
+    Cost: O(n) time, O(1) memory.
+    """
     best = cur = a[0]
     for x in a[1:]:
         cur = max(x, cur + x)
@@ -182,7 +203,11 @@ def max_subarray(a: list[float]) -> float:
 
 
 def max_profit(prices: list[float]) -> float:
-    """One buy then one sell: track the lowest price so far."""
+    """Problem: best profit from one buy followed by one sell.
+    Example: [100, 104, 98, 95, 103, 110, 99, 107] -> 15 (buy 95, sell 110).
+    Approach: one pass, tracking the lowest price so far.
+    Cost: O(n) time, O(1) memory.
+    """
     low, best = prices[0], 0.0
     for p in prices[1:]:
         best = max(best, p - low)
@@ -191,7 +216,11 @@ def max_profit(prices: list[float]) -> float:
 
 
 def max_drawdown(prices: list[float]) -> float:
-    """Largest fall from a running peak, as a fraction. Same shape as max_profit."""
+    """Problem: largest fall from a running peak, as a fraction of the peak.
+    Example: [100, 104, 98, 95, 103, 110, 99, 107] -> 0.10 (110 down to 99).
+    Approach: same shape as max_profit, tracking the highest price so far.
+    Cost: O(n) time, O(1) memory.
+    """
     peak, worst = prices[0], 0.0
     for p in prices:
         peak = max(peak, p)
@@ -226,6 +255,11 @@ from collections import Counter
 
 
 def is_balanced(s: str) -> bool:
+    """Problem: are the brackets ()[]{} correctly matched and nested?
+    Example: "{[()()]}" -> True, "([)]" -> False.
+    Approach: push opening brackets on a stack; a closing bracket must match the top.
+    Cost: O(n) time, O(n) memory.
+    """
     pairs = {")": "(", "]": "[", "}": "{"}
     stack: list[str] = []
     for ch in s:
@@ -237,7 +271,12 @@ def is_balanced(s: str) -> bool:
 
 
 def days_until_higher(prices: list[float]) -> list[int]:
-    """For each day, days to wait for a strictly higher price (0 if never). Monotonic stack."""
+    """Problem: for each day, how many days until a strictly higher price (0 if never).
+    Example: [73, 74, 75, 71, 69, 72, 76, 73] -> [1, 1, 4, 2, 1, 1, 0, 0].
+    Approach: monotonic stack of days still waiting, with decreasing prices; a
+    higher price pops and answers every lower day on top.
+    Cost: O(n) time (each day pushed and popped once), O(n) memory.
+    """
     out = [0] * len(prices)
     stack: list[int] = []               # indices still waiting; their prices are decreasing
     for i, p in enumerate(prices):
@@ -249,6 +288,11 @@ def days_until_higher(prices: list[float]) -> list[int]:
 
 
 def kth_largest(a: list[int], k: int) -> int:
+    """Problem: the k-th largest value (k = 1 is the maximum).
+    Example: [3, 2, 1, 5, 6, 4], k = 2 -> 5.
+    Approach: min-heap holding the k largest values seen; its top is the answer.
+    Cost: O(n log k) time, O(k) memory; works on a stream.
+    """
     heap: list[int] = []                # min-heap of the k largest seen so far
     for x in a:
         heapq.heappush(heap, x)
@@ -258,13 +302,18 @@ def kth_largest(a: list[int], k: int) -> int:
 
 
 class RandomizedSet:
-    """O(1) insert, remove and get_random."""
+    """Problem: a set with insert, remove and get_random, all in O(1).
+    Approach: a list holds the items (O(1) random pick by index); a dict maps
+    item -> index. To remove, move the last item into the hole and pop the end.
+    Cost: O(1) average per operation, O(n) memory.
+    """
 
     def __init__(self) -> None:
         self.items: list[int] = []
         self.pos: dict[int, int] = {}
 
     def insert(self, x: int) -> bool:
+        """Add x; return False if it was already present."""
         if x in self.pos:
             return False
         self.pos[x] = len(self.items)
@@ -272,6 +321,7 @@ class RandomizedSet:
         return True
 
     def remove(self, x: int) -> bool:
+        """Delete x; return False if it was absent."""
         if x not in self.pos:
             return False
         i, last = self.pos.pop(x), self.items.pop()
@@ -280,6 +330,7 @@ class RandomizedSet:
         return True
 
     def get_random(self, rng: random.Random) -> int:
+        """Return a uniformly random item."""
         return rng.choice(self.items)
 
 
@@ -320,7 +371,12 @@ from collections import deque
 
 
 def shortest_path_grid(grid: list[str], start: tuple[int, int], goal: tuple[int, int]) -> int:
-    """Fewest steps through '.' cells (BFS). -1 if unreachable."""
+    """Problem: fewest steps from start to goal moving up/down/left/right through
+    '.' cells ('#' is a wall). Return -1 if the goal is unreachable.
+    Approach: breadth-first search (BFS); the first visit to a cell is by a
+    shortest path because BFS explores in rings of distance 1, 2, 3, ...
+    Cost: O(rows x cols) time and memory.
+    """
     rows, cols = len(grid), len(grid[0])
     dist = {start: 0}
     queue = deque([start])
@@ -336,7 +392,12 @@ def shortest_path_grid(grid: list[str], start: tuple[int, int], goal: tuple[int,
 
 
 def count_islands(grid: list[str]) -> int:
-    """Connected groups of '#' cells (DFS with an explicit stack)."""
+    """Problem: count groups of '#' cells connected up/down/left/right.
+    Example: ["##..", "#..#", "..##", "#..."] -> 3.
+    Approach: scan every cell; at each unvisited '#', flood-fill its island with
+    depth-first search (DFS, explicit stack to avoid the recursion limit).
+    Cost: O(rows x cols) time and memory.
+    """
     seen: set[tuple[int, int]] = set()
     islands = 0
     for r0, row in enumerate(grid):
@@ -357,7 +418,12 @@ def count_islands(grid: list[str]) -> int:
 
 
 def topo_order(needs: dict[str, list[str]]) -> list[str]:
-    """needs[x] = jobs that must finish before x. Raises on a cycle."""
+    """Problem: order jobs so each runs after its prerequisites; needs[x] lists the
+    jobs that must finish before x. Raise if there is a cycle.
+    Approach: Kahn's algorithm; repeatedly run a job with no unfinished
+    prerequisites and unlock the jobs that wait on it.
+    Cost: O(jobs + dependencies) time and memory.
+    """
     waiting = {job: len(pre) for job, pre in needs.items()}
     unlocks: dict[str, list[str]] = {job: [] for job in needs}
     for job, pre in needs.items():
@@ -378,6 +444,12 @@ def topo_order(needs: dict[str, list[str]]) -> list[str]:
 
 
 def dijkstra(graph: dict[str, list[tuple[str, float]]], src: str) -> dict[str, float]:
+    """Problem: shortest distance from src to every reachable node; graph[u] is a
+    list of (neighbour, weight) with all weights >= 0.
+    Approach: Dijkstra; a min-heap of (distance so far, node); the first time a
+    node is popped its distance is final.
+    Cost: O(E log V) time, O(V + E) memory.
+    """
     dist = {src: 0.0}
     heap = [(0.0, src)]
     while heap:
@@ -392,7 +464,13 @@ def dijkstra(graph: dict[str, list[tuple[str, float]]], src: str) -> dict[str, f
 
 
 def has_arbitrage(rates: dict[tuple[str, str], float]) -> bool:
-    """Bellman-Ford on weight -log(rate): a negative cycle means a profitable loop."""
+    """Problem: given exchange rates rates[(a, b)] = units of b per unit of a, is
+    there a loop of trades that ends with more than you started with?
+    Approach: Bellman-Ford with weight -log(rate). Rates multiplying to > 1 means
+    the loop's weights sum to < 0 (a negative cycle). Relax every edge V - 1 times;
+    if an edge still improves, a negative cycle exists.
+    Cost: O(V x E) time, O(V) memory.
+    """
     nodes = {c for pair in rates for c in pair}
     dist = dict.fromkeys(nodes, 0.0)    # start from every node at once
     edges = [(a, b, -math.log(r)) for (a, b), r in rates.items()]
@@ -433,6 +511,11 @@ import heapq
 
 
 def merge_intervals(iv: list[tuple[int, int]]) -> list[tuple[int, int]]:
+    """Problem: merge overlapping intervals.
+    Example: [(1, 3), (8, 10), (2, 6), (15, 18), (17, 20)] -> [(1, 6), (8, 10), (15, 20)].
+    Approach: sort by start; extend the last merged interval or start a new one.
+    Cost: O(n log n) time, O(n) memory.
+    """
     out: list[tuple[int, int]] = []
     for s, e in sorted(iv):
         if out and s <= out[-1][1]:
@@ -443,6 +526,12 @@ def merge_intervals(iv: list[tuple[int, int]]) -> list[tuple[int, int]]:
 
 
 def max_concurrent(iv: list[tuple[int, int]]) -> int:
+    """Problem: the largest number of intervals open at the same moment
+    (meeting rooms, servers or open orders needed).
+    Example: [(0, 30), (5, 10), (15, 20), (25, 35)] -> 2.
+    Approach: sort by start; min-heap of end times; drop the ones already ended.
+    Cost: O(n log n) time, O(n) memory.
+    """
     ends: list[int] = []
     best = 0
     for s, e in sorted(iv):
@@ -454,7 +543,13 @@ def max_concurrent(iv: list[tuple[int, int]]) -> int:
 
 
 def min_daily_capacity(orders: list[int], days: int) -> int:
-    """Smallest daily volume cap that fills the orders, in sequence, within `days`."""
+    """Problem: orders must be filled in sequence within `days` days, and each
+    day's total is capped. Find the smallest cap that works.
+    Example: orders 1..10, days = 5 -> 15.
+    Approach: binary search on the answer. A larger cap always works if a smaller
+    one does, so search the cap in [max(orders), sum(orders)] with a greedy check.
+    Cost: O(n log(sum)) time, O(1) memory.
+    """
     def fits(cap: int) -> bool:
         used, load = 1, 0
         for q in orders:
@@ -506,6 +601,12 @@ from functools import cache
 
 
 def coin_change(coins: list[int], amount: int) -> int:
+    """Problem: fewest coins that add up to `amount` (unlimited coins of each
+    value), or -1 if impossible.
+    Example: coins [1, 5, 10, 25], amount 63 -> 6 (25 + 25 + 10 + 1 + 1 + 1).
+    Approach: dynamic programming; dp[a] = 1 + min(dp[a - c]) over coins c <= a.
+    Cost: O(amount x coins) time, O(amount) memory.
+    """
     inf = amount + 1
     dp = [0] + [inf] * amount
     for a in range(1, amount + 1):
@@ -514,6 +615,13 @@ def coin_change(coins: list[int], amount: int) -> int:
 
 
 def lis_length(a: list[int]) -> int:
+    """Problem: length of the longest strictly increasing subsequence (not
+    necessarily contiguous).
+    Example: [10, 9, 2, 5, 3, 7, 101, 18] -> 4 (2, 3, 7, 18).
+    Approach: tails[k] = smallest possible last value of an increasing run of
+    length k + 1; binary-search where each new value goes.
+    Cost: O(n log n) time, O(n) memory.
+    """
     tails: list[int] = []
     for x in a:
         k = bisect_left(tails, x)
@@ -525,6 +633,12 @@ def lis_length(a: list[int]) -> int:
 
 
 def edit_distance(s: str, t: str) -> int:
+    """Problem: fewest single-character inserts, deletes or replacements turning s
+    into t (Levenshtein distance).
+    Example: "kitten" -> "sitting" = 3.
+    Approach: dynamic programming over prefixes, top-down with memoisation.
+    Cost: O(len(s) x len(t)) time and memory.
+    """
     @cache
     def d(i: int, j: int) -> int:       # distance between s[:i] and t[:j]
         if i == 0 or j == 0:
@@ -534,7 +648,14 @@ def edit_distance(s: str, t: str) -> int:
 
 
 def knapsack(items: list[tuple[int, float]], budget: int) -> float:
-    """items = (cost, value); each item used at most once."""
+    """Problem: choose items, each at most once, to maximise total value with total
+    cost <= budget; items = (cost, value).
+    Example: trades (capital, expected P&L) [(5, 10), (4, 40), (6, 30), (3, 50)],
+    budget 10 -> 90 (the items costing 4 and 3).
+    Approach: dp[b] = best value with budget b; loop b downwards so an item is
+    not used twice.
+    Cost: O(items x budget) time, O(budget) memory.
+    """
     dp = [0.0] * (budget + 1)
     for cost, value in items:
         for b in range(budget, cost - 1, -1):   # downwards, so an item is not reused
@@ -543,7 +664,13 @@ def knapsack(items: list[tuple[int, float]], budget: int) -> float:
 
 
 def combination_sum(cands: list[int], target: int) -> list[list[int]]:
-    """All combinations (reuse allowed) that add up to target."""
+    """Problem: all combinations of candidates (each usable many times) that sum to
+    target; order inside a combination does not matter.
+    Example: [2, 3, 6, 7], target 7 -> [[2, 2, 3], [7]].
+    Approach: backtracking over the sorted candidates; start each level at the
+    current index to avoid duplicates, and stop once a candidate is too big.
+    Cost: exponential in the worst case; output-sensitive in practice.
+    """
     out: list[list[int]] = []
     path: list[int] = []
 
@@ -594,7 +721,12 @@ from collections import deque
 
 
 class RollingVWAP:
-    """VWAP = sum(price * size) / sum(size) over trades in the last `window` seconds."""
+    """Problem: volume-weighted average price, sum(price x size) / sum(size), over the
+    trades in the last `window` seconds, updated as each trade arrives.
+    Approach: a deque of trades plus running sums; add the new trade, then pop
+    expired trades from the front.
+    Cost: O(1) amortised per trade, O(trades in window) memory.
+    """
 
     def __init__(self, window: float) -> None:
         self.window = window
@@ -602,6 +734,7 @@ class RollingVWAP:
         self.pv = self.vol = 0.0
 
     def add(self, t: float, price: float, size: float) -> float:
+        """Record a trade at time t and return the VWAP of the current window."""
         self.trades.append((t, price, size))
         self.pv += price * size
         self.vol += size
@@ -613,6 +746,12 @@ class RollingVWAP:
 
 
 def rolling_max(prices: list[float], w: int) -> list[float]:
+    """Problem: the maximum of each window of w consecutive prices.
+    Example: [3, 1, 4, 1, 5, 9, 2, 6], w = 3 -> [4, 4, 5, 9, 9, 9].
+    Approach: monotonic deque of indices with decreasing prices; the front is the
+    window's max. Pop smaller prices from the back, expired indices from the front.
+    Cost: O(n) time, O(w) memory.
+    """
     dq: deque[int] = deque()            # indices; their prices are decreasing
     out = []
     for i, p in enumerate(prices):
@@ -627,10 +766,17 @@ def rolling_max(prices: list[float], w: int) -> list[float]:
 
 
 class Fenwick:
+    """Problem: an array where you can add to one cell and ask for the sum of the
+    first i cells, both quickly (e.g. traded volume at or below a price tick).
+    Approach: a Fenwick (binary indexed) tree; cell i stores the sum of a block
+    ending at i whose length is the lowest set bit of i.
+    Cost: O(log n) per add or prefix sum, O(n) memory.
+    """
     def __init__(self, n: int) -> None:
         self.tree = [0.0] * (n + 1)     # 1-based
 
     def add(self, i: int, x: float) -> None:
+        """Add x to cell i (0-based)."""
         i += 1
         while i < len(self.tree):
             self.tree[i] += x
@@ -646,7 +792,12 @@ class Fenwick:
 
 
 class TopOfBook:
-    """Best bid and ask with cancels. Lazy delete: cancelled ids are skipped when they surface."""
+    """Problem: track the best bid (highest buy price) and best ask (lowest sell
+    price) while orders are added and cancelled.
+    Approach: a max-heap of bids and a min-heap of asks. Cancels use lazy deletion:
+    mark the id dead and skip dead orders when they reach the top.
+    Cost: O(log n) add, O(1) cancel, amortised O(log n) best.
+    """
 
     def __init__(self) -> None:
         self.bids: list[tuple[float, int]] = []   # (-price, id): max-heap through negation
@@ -654,14 +805,17 @@ class TopOfBook:
         self.live: set[int] = set()
 
     def add(self, oid: int, side: str, price: float) -> None:
+        """Add order `oid` on side 'B' (bid) or 'S' (ask) at `price`."""
         heapq.heappush(self.bids if side == "B" else self.asks,
                        (-price if side == "B" else price, oid))
         self.live.add(oid)
 
     def cancel(self, oid: int) -> None:
+        """Cancel an order: just mark it dead (lazy deletion)."""
         self.live.discard(oid)
 
     def best(self) -> tuple[float | None, float | None]:
+        """Return (best bid, best ask), discarding dead orders at the tops."""
         for heap in (self.bids, self.asks):
             while heap and heap[0][1] not in self.live:
                 heapq.heappop(heap)
