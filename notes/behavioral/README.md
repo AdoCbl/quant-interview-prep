@@ -1,5 +1,7 @@
 # Behavioural
 
-The STAR method, a six-story bank and the questions to ask interviewers are in
-[analytics-dev, section 10](../analytics-dev/README.md#10-behavioural-round) and
-[section 11](../analytics-dev/README.md#11-questions-to-ask-them). They apply to any quant role.
+- [Culture fit](culture-fit.md): what trading firms look for, where they test it, STAR structure,
+  a question bank with what each question is really asking, worked answers, red flags, and
+  questions to ask.
+- The six-story bank and role-specific questions to ask are in
+  [analytics-dev, sections 10–11](../analytics-dev/README.md#10-behavioural-round).

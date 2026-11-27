@@ -18,6 +18,7 @@ Preparation for **Quant Researcher (QR)** and **Quant Developer (QD)** interview
 **Both tracks**
 - [Probability](notes/probability/README.md) — toolkit (linearity, indicators, first-step analysis, Bayes, martingales), distributions, 14 classic problems checked by simulation
 - Brainteasers / mental math
+- [Culture fit and behavioural](notes/behavioral/culture-fit.md) — what trading firms look for, STAR answers, question bank, worked answers, red flags, questions to ask
 - Statistics — estimation, hypothesis testing, regression
 
 **Quant Research**
