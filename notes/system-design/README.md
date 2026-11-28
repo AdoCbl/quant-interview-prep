@@ -13,6 +13,8 @@ This page has four parts:
 - **Part 3:** six worked designs for trading firms (risk and analytics platforms, electronic swaps trading, market data, matching, backtesting).
 - **Part 4:** common follow-up questions.
 
+New to system design? Start with the slower, fully worked [step-by-step example](worked-example.md) (a real-time risk and P&L service, with a runnable prototype).
+
 Abbreviations are spelled out on first use, and a glossary is at the end. A tested order book is in [`src/quantprep/systems/order_book.py`](../../src/quantprep/systems/order_book.py).
 
 ---
