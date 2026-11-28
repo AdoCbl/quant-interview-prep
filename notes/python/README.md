@@ -13,6 +13,8 @@ All snippets were checked on Python 3.14, NumPy 2.5 and pandas 3.1. Abbreviation
 
 ## 1. Names, objects and mutability
 
+Full walkthrough with diagrams, traps and NumPy/pandas behaviour: [references and copies](references-and-copies.md).
+
 **Core idea**: a variable is a *name tag attached to an object*, not a box that holds a value. Assignment never copies; it just attaches another tag.
 
 ```python
