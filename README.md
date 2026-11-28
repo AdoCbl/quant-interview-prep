@@ -33,6 +33,7 @@ Preparation for **Quant Researcher (QR)** and **Quant Developer (QD)** interview
 - LLMs, agents, RAG, MCP — transformer basics, retrieval pipelines, agent patterns, finance pitfalls
 
 **Quant Developer**
+- [DRW: posted interview questions](notes/drw-interview/README.md) — reported process and 48 reported questions with worked solutions (probability, games, trading, stats, coding, C++/systems), answers checked by code
 - [Analytics and middle office: targeted prep](notes/analytics-dev/README.md) — what gets tested, 10-day plan, analytic vs bumped Greeks, a tested risk and scenario engine (`src/quantprep/analytics`), bitemporal / any-horizon analytics, Git/CI/CD/Docker/Kubernetes, Elixir and the BEAM, on-call, 15 mock questions, behavioural stories, questions to ask
 - C++ — memory model, move semantics, templates, cache-friendly design, lock-free structures
 - [Python (mid/senior)](notes/python/README.md) — data model, internals, concurrency, performance, NumPy/pandas depth; plus [features, tricks and live-coding habits](notes/python/senior-features-and-tricks.md)
