@@ -220,6 +220,8 @@ def timer(label):
 
 ## 4. How CPython runs your code
 
+Deeper dive: [Python under the hood](internals.md) covers how `int`, `list`, `dict`, `set`, `str`, `deque`, `heapq`, `sorted` and `lru_cache` are implemented, plus bytecode specialisation, memory management, descriptors and the GIL.
+
 - **Compilation**: source code is compiled to **bytecode** (instructions for Python's virtual machine), which an interpreter loop executes. Use `dis.dis(fn)` to see it.
 - **Recent speed-ups**:
   - 3.11 made the interpreter roughly 25% faster ("specialising" instructions for the types it actually sees).
