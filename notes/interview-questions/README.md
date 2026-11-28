@@ -1,19 +1,19 @@
-# DRW: Posted Interview Questions
+# Reported Quant Interview Questions
 
-Questions candidates have publicly reported from DRW interviews, with full worked solutions,
+Questions candidates have publicly reported from quant trading firm interviews, with full worked solutions,
 grouped by topic and linked to the matching prep pages in this repo. Each term is explained the
 first time it appears; a glossary is at the end.
 
 **How to read this page.** Most public reports give a problem *title* or a one-line description,
 not the exact wording. Where that is the case, the question below is written out in its standard
 form; the solution and numbers are ours, checked by the code blocks (outputs shown are from real
-runs). Sources are listed at the end; reports are from roughly 2016–2026, and third-party prep sites
-are less reliable than first-hand reports. Practise each question for five minutes before reading
+runs). Reports are from roughly 2016–2026, and third-party prep sites are less reliable than
+first-hand reports. Practise each question for five minutes before reading
 the answer.
 
 Contents:
 
-1. [The process, as reported](#1-the-process-as-reported)
+1. [A typical process](#1-a-typical-process)
 2. [Probability and expected value](#2-probability-and-expected-value)
 3. [Brainteasers and games](#3-brainteasers-and-games)
 4. [Trading, market making and finance](#4-trading-market-making-and-finance)
@@ -21,22 +21,22 @@ Contents:
 6. [Coding and data structures](#6-coding-and-data-structures)
 7. [C++, systems and design](#7-c-systems-and-design)
 8. [Checking the answers](#8-checking-the-answers)
-9. [How to use this for the quant developer loop](#9-how-to-use-this-for-the-quant-developer-loop)
-10. [Sources](#10-sources)
+9. [How to prioritise for a quant developer loop](#9-how-to-prioritise-for-a-quant-developer-loop)
+10. [Where these come from](#10-where-these-come-from)
 11. [Glossary](#11-glossary)
 
 ---
 
-## 1. The process, as reported
+## 1. A typical process
 
 | Stage | Engineering / quant developer | Quant trading / research |
 |---|---|---|
-| Online assessment (OA) | Coding test, most often reported on Codility: about 3 problems in 150 minutes, scored on correctness *and* performance. Some older reports mention HackerRank with C/C++/Java only. | About 6–7 questions in 45 minutes (researcher reports up to ~16 in 75 minutes): probability, expected value, statistics, Markov chains, linear algebra (including eigenvalues of an inverse and matrix calculus). Typed numeric answers; webcam-proctored. |
+| Online assessment (OA) | Timed coding test on an online platform: a few problems in one to three hours, scored on correctness *and* performance, with hidden tests | Short timed maths test (often around 6 questions in 45 minutes): probability, expected value, statistics, Markov chains, linear algebra (including eigenvalues of an inverse and matrix calculus). Typed numeric answers; often proctored |
 | Phone / video screen | About 45 minutes, technical plus behavioural; questions on past projects | Probability and brainteasers, answered quickly |
 | Further rounds | Coding (often C++), data structures, CS fundamentals (memory, virtual memory, address spaces), design of trading components | Trading intuition and market making, more probability |
 | Final / onsite | Several back-to-back technical and behavioural interviews; some reports mention a take-home | Several technical interviews; for some programmes a coding challenge and a trading simulation |
 
-Reported themes: the process can take one to two months with several interviews; questions are
+Common themes in reports: the process can take one to two months with several interviews; questions are
 "classic but must be answered quickly"; and several candidates say to work through the "green
 book" (*A Practical Guide to Quantitative Finance Interviews*, Xinfeng Zhou).
 
@@ -294,7 +294,7 @@ Output:
 
 **Q43. Median from a data stream.** Two heaps: a max-heap for the lower half and a min-heap for the upper half, sizes within one of each other. O(log n) per insert, O(1) per median. Code: [Python §12](../python/README.md#12-classic-implementations-with-code), [`streaming.py`](../../src/quantprep/classics/streaming.py).
 
-**Q44. Codility-style OA problems** (titles reported by one prep site). "Maximum income, already holding one asset" is a best-time-to-buy-and-sell variant: track the best value of "holding" and "not holding" at each step (two-state DP). Practise medium array/DP/graph problems with a timer, and test edge cases yourself, because performance and hidden tests count.
+**Q44. Online-assessment problems** (titles reported by a prep site). "Maximum income, already holding one asset" is a best-time-to-buy-and-sell variant: track the best value of "holding" and "not holding" at each step (two-state DP). Practise medium array/DP/graph problems with a timer, and test edge cases yourself, because performance and hidden tests count.
 
 ---
 
@@ -557,12 +557,12 @@ mid 100.000, microprice 100.016
 
 ---
 
-## 9. How to use this for the quant developer loop
+## 9. How to prioritise for a quant developer loop
 
 The analytics / quant developer loop draws mostly from sections 6–7 (coding, C++, systems) and
 from probability and finance questions asked *quickly*. Priorities:
 
-1. **Codility-style coding under time pressure**: 3 problems in 150 minutes, so practise with a timer and test performance and edge cases yourself. See [DSA](../dsa/README.md) and [DSA in C++](../dsa/cpp.md).
+1. **Coding under time pressure**: a few problems in a fixed time, so practise with a timer and test performance and edge cases yourself. See [DSA](../dsa/README.md) and [DSA in C++](../dsa/cpp.md).
 2. **C++ depth**: memory, virtual memory, allocators, containers and their costs, move semantics, concurrency basics.
 3. **Fast probability**: Q1–Q17 aloud, under two minutes each.
 4. **Finance numbers**: Q24–Q31, plus Greeks and DV01 from [analytics-dev](../analytics-dev/README.md).
@@ -571,16 +571,11 @@ from probability and finance questions asked *quickly*. Priorities:
 
 ---
 
-## 10. Sources
+## 10. Where these come from
 
-Candidate-reported questions and process details were taken from these public pages (accessed November 2026). Glassdoor pages could not be fetched directly; their content here is from search-result summaries.
-
-- Glassdoor, DRW interview pages: [quantitative developer](https://www.glassdoor.com/Interview/DRW-Quantitative-Developer-Interview-Questions-EI_IE235115.0,3_KO4,26.htm), [quantitative trader](https://www.glassdoor.com/Interview/DRW-Quantitative-Trader-Interview-Questions-EI_IE235115.0,3_KO4,23.htm), [quantitative researcher](https://www.glassdoor.com/Interview/DRW-Quantitative-Researcher-Interview-Questions-EI_IE235115.0,3_KO4,27.htm), [software engineer](https://www.glassdoor.com/Interview/DRW-Software-Engineer-Interview-Questions-EI_IE235115.0,3_KO4,21.htm)
-- [Quantt: DRW interview process, OA and questions](https://www.quantt.co.uk/resources/drw-interview)
-- [QuantVault: DRW interview questions](https://quantvault.org/drw-interview-questions.html) and [interview process](https://quantvault.org/drw-interview-process.html)
-- [Wall Street Oasis: DRW interviews](https://www.wallstreetoasis.com/company/drw/interview)
-- [JoinTaro: DRW software engineer internship experience](https://www.jointaro.com/interviews/companies/drw/experiences/software-engineer-internship-london-england-october-1-2024-no-offer-positive-c520fb87/)
-- [Blind: DRW senior software engineer interview](https://www.teamblind.com/post/drw-senior-software-engineer-interview-2fu5tboo)
+Compiled in November 2026 from public candidate reports on interview-review sites, forums and
+quant interview prep sites. Most reports give only a title or a short description, so the wording
+here is reconstructed and the solutions are our own.
 
 ---
 

@@ -1,9 +1,9 @@
-# Quant Developer, Analytics and Middle Office: Targeted Prep
+# Analytics Platform Engineering: Interview Prep
 
-A focused plan for a quant developer role on an analytics platform. The team builds services that
-compute sensitivities (option Greeks and rate risk) across asset classes, runs what-if scenarios,
-serves analytics over any time horizon, and works directly with risk managers and trading desks,
-including an on-call rotation. Each term is explained the first time it appears; a glossary is at the end.
+Interview prep for quant developer work on trading analytics platforms: services that compute
+sensitivities (option Greeks and rate risk) across asset classes, run what-if scenarios, serve
+analytics over any time horizon, and are used directly by risk managers and trading desks. Each
+term is explained the first time it appears; a glossary is at the end.
 
 Python code blocks run on their own (`uv run python file.py`) and the block after each shows its
 output. The tested engine used below is
@@ -12,7 +12,7 @@ output. The tested engine used below is
 
 Contents:
 
-1. [What the job is, and what gets tested](#1-what-the-job-is-and-what-gets-tested)
+1. [What these teams do, and what gets tested](#1-what-these-teams-do-and-what-gets-tested)
 2. [A 10-day plan](#2-a-10-day-plan)
 3. [Sensitivities: analytic vs bump-and-revalue](#3-sensitivities-analytic-vs-bump-and-revalue)
 4. [A risk and scenario engine you can talk through](#4-a-risk-and-scenario-engine-you-can-talk-through)
@@ -27,9 +27,9 @@ Contents:
 
 ---
 
-## 1. What the job is, and what gets tested
+## 1. What these teams do, and what gets tested
 
-**The job in one sentence:** build and run reliable, fast, reproducible services that turn positions
+**The work in one sentence:** build and run reliable, fast, reproducible services that turn positions
 and market data into the numbers risk managers and traders act on: PV (present value), Greeks,
 DV01, scenario P&L and history.
 

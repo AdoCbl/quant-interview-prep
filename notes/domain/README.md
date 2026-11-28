@@ -1,7 +1,7 @@
 # Domain Knowledge: Proprietary Trading, Futures and the Middle Office
 
 What a proprietary trading firm does, how a trade moves from execution to settlement, and the
-products a rates-heavy, multi-asset trading firm deals in every day: futures, Treasury and SOFR
+products a multi-asset trading firm deals in every day: futures, Treasury and SOFR
 futures, options on futures, and a quick tour of equity index, energy and crypto. The angle is
 what a quant developer building analytics (positions, P&L, risk, margin) needs to know. Each term
 is explained the first time it appears; a glossary is at the end. Formulas come first, then numbers.
@@ -364,7 +364,7 @@ P&L -17,500 USD
 ## 7. Options on futures: P&L explain and margin
 
 Exchange-traded options on SOFR futures, Treasury futures, energy and equity index futures are a
-large share of trading at a firm like this. They are priced with Black's model (Black-Scholes applied to a futures price).
+large share of exchange trading. They are priced with Black's model (Black-Scholes applied to a futures price).
 
 **P&L explain** (attribution): split the day's P&L into the risks that caused it, using the Greeks:
 
